@@ -5,7 +5,6 @@ __email__ = 'yolanda.robla-mota@hp.com'
 __version__ = '0.1.0'
 
 import argparse
-import logging.config
 import sys
 
 from nodepool_job_launcher import nodepool_job_launcher
@@ -19,10 +18,13 @@ class NodepoolJobLauncherCmd(object):
         parser.add_argument('-c', dest='config',
                             default='/etc/nodepool_job_launcher/config.yaml',
                             help='path to config file')
-        parser.add_argument('-j', dest='job',
-                            default='Job to be executed')
+        parser.add_argument('-j', dest='job', default='',
+                            help='Job to be executed')
 
         self.args = parser.parse_args()
+        if not self.args.job:
+            print "Error: you must provie a job"
+            sys.exit(1)
 
     def main(self):
         self.nodepool_job_launcher = nodepool_job_launcher.Launcher(self.args.config, self.args.job)
