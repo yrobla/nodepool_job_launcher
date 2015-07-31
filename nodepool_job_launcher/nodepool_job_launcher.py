@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 
 import gear
+import jenkins
 import json
 import sys
+import time
 import yaml
 
 from uuid import uuid4
@@ -32,7 +34,7 @@ class Launcher():
 
     # start the connection with jenkins server
     def connectJenkins(self):
-        self.jenkins = jenkins.jenkins(self.jenkins_config['url'], self.jenkins_config['user'],
+        self.jenkins = jenkins.Jenkins(self.jenkins_config['url'], self.jenkins_config['user'],
                                        self.jenkins_config['apikey'])
 
     # convert the yaml in a dictionary
@@ -72,6 +74,9 @@ class Launcher():
         gearman_job = gear.Job("build:%s:%s" % (self.job, self.jobs[self.job]),
                                json.dumps({}), str(uuid4().hex))
         self.gearman.submitJob(gearman_job)
+
+        # sleep for a bit, to let gearman operate
+        time.sleep(1)
 
         # send job to jenkins
         self.jenkins.build_job(self.job)
