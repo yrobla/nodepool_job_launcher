@@ -72,7 +72,7 @@ class Launcher():
 
         # send demand to nodepool
         gearman_job = gear.Job("build:%s:%s" % (self.job, self.jobs[self.job]),
-                               json.dumps({}), str(uuid4().hex))
+                               json.dumps({"OFFLINE_NODE_WHEN_COMPLETE": True}), str(uuid4().hex))
         self.gearman.submitJob(gearman_job)
 
         # sleep for a bit, to let gearman operate
